@@ -12,6 +12,14 @@ using Test                   # Importa el módulo de pruebas de Julia
         include("test_monodisperse.jl")
     end
 
+    @testset "SALR Model" begin
+        include(joinpath("models", "test_SALR.jl"))
+    end
+    
+    @testset "Smoke Tests for All Models" begin
+        include("test_smoke_all_models.jl")
+    end
+    
     #@testset "Mixture Systems" begin
         # Esta sección incluirá pruebas para los modelos de mezclas.
         # Puedes crear un archivo test_mixtures.jl para estas.
