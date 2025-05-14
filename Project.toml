@@ -1,0 +1,18 @@
+name = "AnalyticalStructureFactors"
+uuid = "91294a36-8144-4a6b-bcde-0166c034afe3"
+authors = ["Ricardo Peredo-Ortiz <rperedo@if.uaslp.mx>"]
+version = "0.0.1" # O la versión actual de tu paquete
+
+[deps]
+# Aquí irían las dependencias de tu paquete, si las tiene
+# Ejemplo:
+# SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
+
+[compat]
+julia = "1.11" # O la versión mínima de Julia con la que tu paquete es compatible
+# Aquí irían los rangos de compatibilidad para tus dependencias
+# Ejemplo:
+# SpecialFunctions = "1"
+
+# Puedes añadir un campo de descripción también:
+# description = "A Julia package for computing static structure factors using analytical solutions."
