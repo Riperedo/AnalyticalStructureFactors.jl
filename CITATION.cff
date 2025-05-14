@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use AnalyticalStructureFactors.jl in your work, please cite it using the information below."
+authors:
+  - family-names: "Peredo-Ortiz"
+    given-names: "Ricardo"
+    orcid: "https://orcid.org/0000-0002-1878-9754"
+title: "AnalyticalStructureFactors.jl"
+version: "0.0.1" # Asegúrate que coincida con la versión que estás lanzando
+date-released: "2025-05-14" # O la fecha de lanzamiento de esta versión
+identifiers:
+  - type: url
+    value: "https://www.google.com/url?sa=E&source=gmail&q=https://github.com/Riperedo/AnalyticalStructureFactors.jl"
+keywords:
+  - "static structure factor"
+  - "analytical solutions"
+  - "condensed matter physics"
+  - "julia"
+license: MIT
+type: software # Esto indica que es software
