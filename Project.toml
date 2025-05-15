@@ -7,12 +7,14 @@ version = "0.0.1" # O la versión actual de tu paquete
 # Aquí irían las dependencias de tu paquete, si las tiene
 # Ejemplo:
 # SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e" # UUID de LinearAlgebra
 
 [compat]
 julia = "1.11" # O la versión mínima de Julia con la que tu paquete es compatible
 # Aquí irían los rangos de compatibilidad para tus dependencias
 # Ejemplo:
 # SpecialFunctions = "1"
+LinearAlgebra = "1" 
 
 # Puedes añadir un campo de descripción también:
 # description = "A Julia package for computing static structure factors using analytical solutions."

@@ -250,7 +250,7 @@ function blip(temperature::T_num; ν::Integer = 6) where {T_num<:AbstractFloat}
     end
 end
 
-# --- Verlet-Weiss Corrections for Hard Spheres ---
+# --- Verlet-Weiss Corrections for Monodisperse Hard Spheres ---
 
 @doc """
     phi_VW(ϕ_HS::T) where {T<:AbstractFloat}
@@ -301,3 +301,54 @@ function k_VW(ϕ_HS::T, k_HS::T) where {T<:AbstractFloat}
     end
     return k_HS * cbrt(ratio_phi)
 end
+
+# --- Conversion Functions for Mixtures (Vectorized) ---
+
+@doc """
+    phi_to_rho_mixture(ϕ_vector::AbstractVector{T}, σ_vector::AbstractVector{T}) where T<:AbstractFloat
+
+Converts a vector of component packing fractions `ϕ_vector` and diameters `σ_vector`
+to a vector of corresponding number densities `ρ_vector` for a mixture.
+ρᵢ = 6ϕᵢ / (πσᵢ³)
+
+# Arguments
+- `ϕ_vector::AbstractVector{T}`: Vector of packing fractions for each component.
+- `σ_vector::AbstractVector{T}`: Vector of diameters for each component.
+
+# Returns
+- `Vector{T}`: Vector of number densities for each component.
+
+# Throws
+- `DimensionMismatch`: if length of `ϕ_vector` and `σ_vector` do not match.
+"""
+function phi_to_rho_mixture(ϕ_vector::AbstractVector{T}, σ_vector::AbstractVector{T}) where T<:AbstractFloat
+    if length(ϕ_vector) != length(σ_vector)
+        throw(DimensionMismatch("ϕ_vector and σ_vector must have the same length"))
+    end
+    return (T(6.0)/T(π)) .* ϕ_vector ./ (σ_vector.^3)
+end
+
+@doc """
+    rho_to_phi_mixture(ρ_vector::AbstractVector{T}, σ_vector::AbstractVector{T}) where T<:AbstractFloat
+
+Converts a vector of component number densities `ρ_vector` and diameters `σ_vector`
+to a vector of corresponding packing fractions `ϕ_vector` for a mixture.
+ϕᵢ = ρᵢπσᵢ³ / 6
+
+# Arguments
+- `ρ_vector::AbstractVector{T}`: Vector of number densities for each component.
+- `σ_vector::AbstractVector{T}`: Vector of diameters for each component.
+
+# Returns
+- `Vector{T}`: Vector of packing fractions for each component.
+
+# Throws
+- `DimensionMismatch`: if length of `ρ_vector` and `σ_vector` do not match.
+"""
+function rho_to_phi_mixture(ρ_vector::AbstractVector{T}, σ_vector::AbstractVector{T}) where T<:AbstractFloat
+    if length(ρ_vector) != length(σ_vector)
+        throw(DimensionMismatch("ρ_vector and σ_vector must have the same length"))
+    end
+    return (ρ_vector .* (σ_vector.^3)) .* (T(π)/T(6.0))
+end
+

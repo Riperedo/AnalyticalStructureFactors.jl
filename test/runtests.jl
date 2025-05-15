@@ -20,13 +20,13 @@ using Test                   # Importa el módulo de pruebas de Julia
         include("test_smoke_all_models.jl")
     end
     
-    #@testset "Mixture Systems" begin
+    @testset "Mixture Systems" begin
         # Esta sección incluirá pruebas para los modelos de mezclas.
         # Puedes crear un archivo test_mixtures.jl para estas.
         # Por ahora, lo dejaremos vacío o con una prueba simple si no tienes código de mezclas aún.
         #@test true # Una prueba trivial para que el testset no esté vacío
-        # include("test_mixtures.jl") # Descomenta cuando tengas este archivo
-    #end
+        include("models/mixtures/test_hardsphere_mixture.jl") # Descomenta cuando tengas este archivo
+    end
 
     # Puedes añadir más @testset para otras categorías de pruebas.
 end

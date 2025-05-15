@@ -5,43 +5,77 @@ module AnalyticalStructureFactors
 # --- Dependencias del Paquete (si las hay) ---
 # using SpecialFunctions
 # using QuadGK # Si decides usarlo para la función blip, por ejemplo
+using LinearAlgebra # Necesario para operaciones matriciales en mezclas (inv, ')
 
 # --- Inclusión de Archivos de Código Fuente ---
 
 # Utilidades generales y correcciones
-include("utils.jl") # Contiene blip, phi_VW, k_VW
+include("utils.jl") # Contiene blip, phi_VW (monodisp.), k_VW (monodisp.), phi_to_rho_mixture, rho_to_phi_mixture
 
 # Transformadas de Fourier de potenciales de par
-include("potentials.jl") # Contiene betaU_SW, betaU_Yukawa
+include("potentials.jl") # Contiene betaU_SW, betaU_Yukawa (para monodispersos o pares)
 
-# Modelos específicos de factores de estructura
-# Nota: Usamos joinpath para construir rutas de archivo de forma robusta
+# --- Modelos Monodispersos ---
 include(joinpath("models", "hardsphere.jl"))    # Lógica para HS-PY, HS-VW, WCA-blip
-include(joinpath("models", "squarewell.jl"))  # Lógica para S(k) con potencial de pozo cuadrado
-include(joinpath("models", "yukawa.jl"))      # (Futuro) Para modelos basados en Yukawa
-include(joinpath("models", "SALR.jl"))
-# include("mixtures.jl")                       # (Futuro) Para sistemas de mezclas
+include(joinpath("models", "squarewell.jl"))  # Lógica para S(k) con potencial de pozo cuadrado (monodisperso)
+include(joinpath("models", "yukawa.jl"))      # Lógica para S(k) con potencial Yukawa (monodisperso)
+include(joinpath("models", "SALR.jl"))        # Lógica para S(k) con potencial SALR (monodisperso)
+
+# --- Modelos de Mezclas ---
+# Sistema de referencia para mezclas
+include(joinpath("models", "mixtures", "hardsphere_mixture.jl")) # S_HS_Baxter_mixture, IS_HS_Baxter_mixture
+include(joinpath("models", "mixtures", "vw_mixture.jl"))         # VW_correction_mixture, S_HS_VW_mixture, IS_HS_VW_mixture
+
+# RPA para mezclas
+include(joinpath("models", "mixtures", "yukawa_rpa_mixture.jl"))       # S_RPA_mixture_Yukawa
+include(joinpath("models", "mixtures", "squarewell_rpa_mixture.jl")) # S_RPA_mixture_SquareWell
+include(joinpath("models", "mixtures", "SALR_rpa_mixture.jl"))       # S_RPA_mixture_SALR
+
 
 # --- Exportaciones de la API Pública ---
 
 # Desde utils.jl
-export blip, phi_VW, k_VW
+export blip
+export phi_VW, k_VW # Para sistemas monodispersos
+export phi_to_rho_mixture, rho_to_phi_mixture # Para mezclas
 
 # Desde potentials.jl (exportar si los usuarios las necesitan directamente)
 export betaU_SW, betaU_Yukawa
 
-# Desde models/hardsphere.jl
-export S_HS_PY, C_HS_PY, IS_HS_PY  # Funciones básicas de Percus-Yevick
-export S_HS_VW, C_HS_VW, IS_HS_VW  # Funciones con corrección Verlet-Weiss
-export S_WCA_blip, C_WCA_blip, IS_WCA_blip # Factor de estructura WCA usando blip
+# Desde models/hardsphere.jl (Monodisperso)
+export S_HS_PY, C_HS_PY, IS_HS_PY
+export S_HS_VW, C_HS_VW, IS_HS_VW
+export S_WCA_blip, C_WCA_blip, IS_WCA_blip
 
-# Desde models/
-export S_SW_RPA # Ejemplo de nombre para S(k) de Pozo Cuadrado con RPA
-export S_Yukawa_RPA # Esto exportará todos los métodos de S_Yukawa_RPA
-export S_SALR_RPA
+# Desde models/squarewell.jl (Monodisperso)
+export S_SW_RPA # Asumiendo que este es el nombre de tu función principal aquí
+
+# Desde models/yukawa.jl (Monodisperso)
+export S_Yukawa_RPA # Asumiendo que este es el nombre de tu función principal aquí
+
+# Desde models/SALR.jl (Monodisperso)
+export S_SALR_RPA # Asumiendo que este es el nombre de tu función principal aquí
+
+# --- Exportaciones para Mezclas ---
+
+# Desde models/mixtures/hardsphere_mixture.jl
+export Qk_mixture, S_HS_Baxter_mixture, IS_HS_Baxter_mixture
+
+# Desde models/mixtures/vw_mixture.jl
+export VW_correction_mixture, S_HS_VW_mixture, IS_HS_VW_mixture
+
+# Desde models/mixtures/yukawa_rpa_mixture.jl
+export S_RPA_mixture_Yukawa
+
+# Desde models/mixtures/squarewell_rpa_mixture.jl
+export S_RPA_mixture_SquareWell
+
+# Desde models/mixtures/SALR_rpa_mixture.jl
+export S_RPA_mixture_SALR
 
 
-# Aquí podrías añadir más exportaciones a medida que desarrollas el paquete.
-# Considera también las funciones "fábrica" que devuelven f(k) si mantienes ese patrón.
+# Considera también las funciones "fábrica" que devuelven f(k) si mantienes ese patrón
+# y quieres exportarlas explícitamente. Si una función tiene múltiples métodos (como las
+# versiones fábrica y las que toman k), exportar el nombre de la función exporta todos sus métodos.
 
 end # module
