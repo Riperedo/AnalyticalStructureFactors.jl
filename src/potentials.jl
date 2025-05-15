@@ -73,7 +73,7 @@ function betaU_SW(temperature::T_num, lambda_range::T_num, k::T_num) where {T_nu
 end
 
 @doc """
-    betaU_Yukawa(amplitude::T_num, inv_screening_length::T_num, k::T_num) where {T_num<:AbstractFloat}
+    betaU_Yukawa(amplitude::β_num, inv_screening_length::β_num, k::β_num) where {β_num<:AbstractFloat}
 
 Auxiliary function to compute the Fourier Transform of a Yukawa potential,
 multiplied by β = 1/(k_B T_abs).
@@ -92,50 +92,50 @@ provided in the original code. The main formula for k->0 gives (1+z)/z², while 
 This implementation uses the formulas as provided.
 
 # Arguments
-- `amplitude::T_num`: Effective amplitude of the Yukawa potential (often includes β, e.g., βε).
-- `inv_screening_length::T_num`: Dimensionless inverse screening length (z).
-- `k::T_num`: Dimensionless wave vector (k = q*σ).
+- `amplitude::β_num`: Effective amplitude of the Yukawa potential (often includes β, e.g., βε).
+- `inv_screening_length::β_num`: Dimensionless inverse screening length (z).
+- `k::β_num`: Dimensionless wave vector (k = q*σ).
 
 # Returns
-- `T_num`: The value of β * u_Yukawa_tilde(k).
+- `β_num`: The value of β * u_Yukawa_tilde(k).
 
 # References
 [1] Yukawa, H. (1935). "On the interaction of elementary particles". Proc. Phys.-Math. Soc. Jpn. 17: 48.
     (Note: Specific forms for liquids often derive from this but might differ.)
 """
-function betaU_Yukawa(amplitude::T_num, inv_screening_length::T_num, k::T_num) where {T_num<:AbstractFloat}
+function betaU_Yukawa(amplitude::β_num, inv_screening_length::β_num, k::β_num) where {β_num<:AbstractFloat}
     k_abs = abs(k)
     z = inv_screening_length # Alias for clarity
 
     # Check for z=0 if it's problematic for the formulas
-    if z ≈ zero(T_num) && k_abs ≈ zero(T_num) # Both zero, problematic for expansion
+    if z ≈ zero(β_num) && k_abs ≈ zero(β_num) # Both zero, problematic for expansion
         @warn "Inverse screening length z and wavevector k are both near zero in betaU_Yukawa. Result may be Inf/NaN."
         # Return a value consistent with unscreened Coulomb if applicable, or handle as error.
         # For now, let it proceed to potential division by zero in expansion.
-    elseif z ≈ zero(T_num) # Only z is zero (Coulomb limit)
+    elseif z ≈ zero(β_num) # Only z is zero (Coulomb limit)
          # The main formula becomes (k*cos(k))/(k*k^2) = cos(k)/k^2
          # The expansion for z=0 is ill-defined.
-         if k_abs < T_num(0.075)
+         if k_abs < β_num(0.075)
             @warn "Small-k expansion for betaU_Yukawa is ill-defined for z=0. Using main formula."
             # Fallback to main formula or a specific Coulomb FT if k_abs is also small
-            if k_abs < eps(T_num)
-                return T_num(Inf) # Or some other limit for Coulomb 1/k^2
+            if k_abs < eps(β_num)
+                return β_num(Inf) # Or some other limit for Coulomb 1/k^2
             else
-                return T_num(4.0) * T_num(π) * amplitude * (cos(k_abs) / k_abs^2)
+                return β_num(4.0) * β_num(π) * amplitude * (cos(k_abs) / k_abs^2)
             end
          else
-            return T_num(4.0) * T_num(π) * amplitude * (cos(k_abs) / k_abs^2) # Simplified for z=0
+            return β_num(4.0) * β_num(π) * amplitude * (cos(k_abs) / k_abs^2) # Simplified for z=0
          end
     end
 
 
-    if k_abs < T_num(0.075)
+    if k_abs < β_num(0.075)
         # Small k expansion (as provided by user)
         # Original: 4*π*A*((1/z)+1-(z*z+9*z+6)*k*k/(6*z*z))
         # Note: The k=0 limit of this is 4*π*A*(1/z + 1)
-        term_const = one(T_num)/z + one(T_num)
-        term_k2 = (z^2 + T_num(9.0)*z + T_num(6.0)) * k_abs^2 / (T_num(6.0)*z^2)
-        return T_num(4.0) * T_num(π) * amplitude * (term_const - term_k2)
+        term_const = one(β_num)/z + one(β_num)
+        term_k2 = (z^2 + β_num(9.0)*z + β_num(6.0)) * k_abs^2 / (β_num(6.0)*z^2)
+        return β_num(4.0) * β_num(π) * amplitude * (term_const - term_k2)
     else
         # Main formula
         # Original: 4*π*A*(k*cos(k) + z*sin(k))/(k*(k^2+z^2))
@@ -143,11 +143,11 @@ function betaU_Yukawa(amplitude::T_num, inv_screening_length::T_num, k::T_num) w
         # There is a known discrepancy between the k=0 limits of the two branches.
         numerator = k_abs * cos(k_abs) + z * sin(k_abs)
         denominator = k_abs * (k_abs^2 + z^2)
-        if denominator ≈ zero(T_num)
+        if denominator ≈ zero(β_num)
             @warn "Denominator is zero in betaU_Yukawa for k=$k_abs, z=$z. Result may be Inf/NaN."
-            return sign(numerator) * T_num(Inf) # Or handle as error
+            return sign(numerator) * β_num(Inf) # Or handle as error
         end
-        return T_num(4.0) * T_num(π) * amplitude * numerator / denominator
+        return β_num(4.0) * β_num(π) * amplitude * numerator / denominator
     end
 end
 
