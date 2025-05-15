@@ -72,4 +72,7 @@ println("S(k) for WCA with ϕ=$ϕ, T=$T_wca, k=$k is: $sq_wca")
 ρ_mix = phi_to_rho_mixture(ϕ_mix, σ_mix)
 S_ij_matrix = S_HS_Baxter_mixture(σ_mix, ρ_mix, k)
 println("S_ij(k) matrix for HS mixture at k=$k: \\n", S_ij_matrix)
-DocumentationFor more detailed information on the implemented models, API reference, and examples, please refer to the documentation.How to CiteIf you use AnalyticalStructureFactors.jl in your research or software, please cite it.You can use the information in the CITATION.cff file (if available) or cite it as:Ricardo Peredo-Ortiz. (2025). AnalyticalStructureFactors.jl (Version 0.0.1) [Software]. Available at: https://github.com/Riperedo/AnalyticalStructureFactors.jl(Please update the version number and year as appropriate for new releases).ContributingContributions to AnalyticalStructureFactors.jl are welcome! If you find any issues, have suggestions for improvements, or want to add new models, please feel free to:Open an issue on the GitHub repository.
+```
+## Documentation
+
+For more detailed information on the implemented models, API reference, and examples, please refer to the documentation.How to CiteIf you use AnalyticalStructureFactors.jl in your research or software, please cite it.You can use the information in the CITATION.cff file (if available) or cite it as:Ricardo Peredo-Ortiz. (2025). AnalyticalStructureFactors.jl (Version 0.0.1) [Software]. Available at: https://github.com/Riperedo/AnalyticalStructureFactors.jl(Please update the version number and year as appropriate for new releases).ContributingContributions to AnalyticalStructureFactors.jl are welcome! If you find any issues, have suggestions for improvements, or want to add new models, please feel free to:Open an issue on the GitHub repository.
