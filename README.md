@@ -55,6 +55,12 @@ sq_array_factory = s_hs_py_func.(k_array)
 T_wca = 1.0 # Temperature
 sq_wca = S_WCA_blip(ϕ, T_wca, k)
 println("S(k) for WCA with ϕ=$ϕ, T=$T_wca, k=$k is: $sq_wca")
+
+# Example for Yukawa
+T_yuk = 1.0 # Temperature
+z_yuk = 2.0 # inv screening length
+sq_yuk = S_Yukawa_RPA(ϕ, 1/T_yuk, z, k)
+println("S(k) for Yukaya RPA with ϕ=$ϕ, T=$T_yuk, z = $z_yuk k=$k is: $sq_yuk")
 ```
 
 ## Documentation
