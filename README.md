@@ -57,10 +57,10 @@ sq_wca = S_WCA_blip(ϕ, T_wca, k)
 println("S(k) for WCA with ϕ=$ϕ, T=$T_wca, k=$k is: $sq_wca")
 
 # Example for Yukawa
-T_yuk = 1.0 # Temperature
+beta_yuk = 1.0 # Inverse temperature
 z_yuk = 2.0 # inv screening length
-sq_yuk = S_Yukawa_RPA(ϕ, 1/T_yuk, z, k)
-println("S(k) for Yukaya RPA with ϕ=$ϕ, T=$T_yuk, z = $z_yuk k=$k is: $sq_yuk")
+sq_yuk = S_Yukawa_RPA(ϕ, beta_yuk, z, k)
+println("S(k) for Yukaya RPA with ϕ=$ϕ, β =$beta_yuk, z = $z_yuk k=$k is: $sq_yuk")
 ```
 
 ## Documentation
