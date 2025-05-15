@@ -8,6 +8,7 @@ version = "0.0.1" # O la versión actual de tu paquete
 # Ejemplo:
 # SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e" # UUID de LinearAlgebra
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab" # UUID de DelimitedFiles
 
 [compat]
 julia = "1.11" # O la versión mínima de Julia con la que tu paquete es compatible
@@ -15,6 +16,7 @@ julia = "1.11" # O la versión mínima de Julia con la que tu paquete es compati
 # Ejemplo:
 # SpecialFunctions = "1"
 LinearAlgebra = "1" 
+DelimitedFiles = "1" 
 
 # Puedes añadir un campo de descripción también:
 # description = "A Julia package for computing static structure factors using analytical solutions."

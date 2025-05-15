@@ -9,6 +9,8 @@
 Calculates Baxter's Q-matrix for a multi-component hard-sphere mixture
 within the Percus-Yevick approximation.
 
+The formulas for `pR` and `pS` are based on the user's provided  implementation.
+
 # Arguments
 - `σ_vector::AbstractVector{T}`: Vector of hard-sphere diameters for each component.
 - `ρ_vector::AbstractVector{T}`: Vector of number densities for each component.
@@ -17,30 +19,43 @@ within the Percus-Yevick approximation.
 # Returns
 - `Matrix{Complex{T}}`: The n x n Baxter Q-matrix.
 """
-function Qk_mixture(σ_vector::AbstractVector{T}, ρ_vector::AbstractVector{T}, k_wavevector::T) where {T<:AbstractFloat}
+function Qk_mixture(σ_vector::AbstractVector{T}, ρ_vector::AbstractVector{T}, k::T) where {T<:AbstractFloat}
     n_components = length(ρ_vector)
     if length(σ_vector) != n_components
         throw(DimensionMismatch("σ_vector and ρ_vector must have the same length"))
     end
 
+    # Corregido: Asegurar multiplicación por π/6
     ζ2 = sum(ρ_vector .* (σ_vector.^2)) * (T(π)/T(6.0))
     ζ3 = sum(ρ_vector .* (σ_vector.^3)) * (T(π)/T(6.0)) # Total packing fraction ϕ_total
 
     Δ = one(T) - ζ3
-    if Δ <= zero(T)
-        @warn "Denominator (1 - ζ3) = $Δ is non-positive. Results may be unphysical."
+    if Δ <= zero(T) # Podría ser problemático si Δ es exactamente cero también.
+        @warn "Denominator (1 - ζ3) = $Δ is non-positive or zero. Results may be unphysical."
     end
-    Δ² = Δ^2
+    Δ² = Δ^2 # Evitar Δ = 0 aquí. Si Δ es cero, Δ² es cero.
 
+    # Generalizado a n componentes
     Q_matrix = zeros(Complex{T}, n_components, n_components)
-    k = k_wavevector # Alias for clarity
 
     for i in 1:n_components
         σ_i = σ_vector[i]
         ρ_i = ρ_vector[i]
         
-        a_i = (one(T) - ζ3 + T(3.0)*σ_i*ζ2)/(Δ²)
-        b_i = -(T(3.0)/T(2.0))*(σ_i^2)*ζ2/(Δ²)
+        # Coeficientes a_i y b_i según la forma del código 
+        # Estos son parámetros para la función Q_ij(r) de Baxter.
+        # Manejar el caso Δ² ≈ 0 para evitar división por cero si Δ es muy pequeño.
+        if Δ² ≈ zero(T)
+            # Asignar valores que eviten NaN/Inf o manejar como error.
+            # Esto indica una densidad muy alta, probablemente no física para PY.
+            a_i = T(Inf) # O algún otro valor de señalización
+            b_i = T(Inf)
+            @warn "Δ² is close to zero in Qk_mixture. Coefficients a_i, b_i might be Inf."
+        else
+            a_i = (one(T) - ζ3 + T(3.0)*σ_i*ζ2)/(Δ²)
+            b_i = -(T(3.0)/T(2.0))*(σ_i^2)*ζ2/(Δ²)
+        end
+
 
         for j in 1:n_components
             σ_j = σ_vector[j]
@@ -48,43 +63,50 @@ function Qk_mixture(σ_vector::AbstractVector{T}, ρ_vector::AbstractVector{T}, 
 
             delta_ij = (i == j ? one(T) : zero(T))
 
-            R_limit = (σ_i + σ_j) / T(2.0)
-            Sr_limit = (σ_i - σ_j) / T(2.0)
-
+            # Límites usados en las fórmulas de  para pR y pS
+            Sr_limit =(σ_i - σ_j)/T(2.0)
+            R_limit = (σ_i + σ_j)/T(2.0)
+            
             if k ≈ zero(T)
                 # Límite k=0 para la integral de Q_ij(r).
-                # Q_ij(r) = a_i(r-R_limit) + 0.5*b_i(r-R_limit)^2, integrada de Sr_limit a R_limit.
+                # Asumiendo Q_ij(r) = a_i(r-R_limit) + 0.5*b_i(r-R_limit)^2, integrada de Sr_limit a R_limit.
+                # Esta forma de Q_ij(r) es una interpretación común que podría llevar a las expresiones pR, pS.
                 # Integral = -a_i * (σ_j^2) / 8 + b_i * (σ_j^3) / 48
+                # (Esta fórmula para la integral debe ser consistente con la forma de Q_ij(r)
+                # cuya transformada de Fourier da las expresiones pR y pS)
                 integral_Qij_r_k0 = -a_i * (σ_j^2) / T(8.0) + b_i * (σ_j^3) / T(48.0)
+                
+                # El factor 2π está en la fórmula final de Q_matrix[i,j]
                 Q_matrix[i,j] = delta_ij - T(2.0)*T(π)*sqrt(ρ_i*ρ_j) * integral_Qij_r_k0
             else
+                # Usando las fórmulas exactas del código  proporcionado por el usuario para pR y pS
                 ik = im * k
                 ik2 = ik^2
                 ik3 = ik^3
 
                 # pR (límite superior R_limit)
                 exp_ikR = exp(ik * R_limit)
-                term_a1_R = (a_i / T(2.0)) * exp_ikR * (T(2.0) - T(2.0)*ik*R_limit - (k*R_limit)^2) / ik3
-                term_a2_R = -(a_i / T(2.0)) * (R_limit^2) * exp_ikR / ik
-                term_b1_R = b_i * exp_ikR * (ik*R_limit - one(T)) / ik2
-                term_b2_R = -b_i * R_limit * exp_ikR / ik 
-                pR = term_a1_R + term_a2_R + term_b1_R + term_b2_R
-
+                # El 'R' en bi*R*... se interpreta como R_limit aquí
+                pR = (a_i/T(2.0))*exp_ikR*((T(2.0)-T(2.0)*ik*R_limit-(k^2)*(R_limit^2))/(ik3)) -
+                     (a_i/T(2.0))*(R_limit^2)*(exp_ikR/(ik)) +
+                     b_i*exp_ikR*((ik*R_limit - one(T))/(ik2)) -
+                     b_i*R_limit*(exp_ikR/(ik))
+            
                 # pS (límite superior Sr_limit)
                 exp_ikSr = exp(ik * Sr_limit)
-                term_a1_Sr = (a_i / T(2.0)) * exp_ikSr * (T(2.0) - T(2.0)*ik*Sr_limit - (k*Sr_limit)^2) / ik3
-                term_a2_Sr = -(a_i / T(2.0)) * (Sr_limit^2) * exp_ikSr / ik # Este término usa Sr_limit^2
-                term_b1_Sr = b_i * exp_ikSr * (ik*Sr_limit - one(T)) / ik2
-                # CORRECCIÓN: El siguiente término usa R_limit, como en el código Matlab para pS
-                term_b2_Sr = -b_i * R_limit * exp_ikSr / ik 
-                pS = term_a1_Sr + term_a2_Sr + term_b1_Sr + term_b2_Sr
-                
+                # El 'R' en bi*R*... se interpreta como R_limit aquí, como en el código 
+                pS = (a_i/T(2.0))*exp_ikSr*((T(2.0)-T(2.0)*ik*Sr_limit-(k^2)*(Sr_limit^2))/(ik3)) -
+                     (a_i/T(2.0))*(R_limit^2)*(exp_ikSr/(ik)) + # Error en : Debería ser Sr_limit^2 aquí? Usando R_limit^2 como en .
+                     b_i*exp_ikSr*((ik*Sr_limit - one(T))/(ik2)) -
+                     b_i*R_limit*(exp_ikSr/(ik)) # Usando R_limit como en el código 
+
                 Q_matrix[i,j] = delta_ij - T(2.0)*T(π)*sqrt(ρ_i*ρ_j)*(pR-pS)
             end
         end
     end
     return Q_matrix
 end
+
 
 @doc """
     IS_HS_Baxter_mixture(σ_vector::AbstractVector{T}, ρ_vector::AbstractVector{T}, k_wavevector::T) where {T<:AbstractFloat}

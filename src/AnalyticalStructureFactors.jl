@@ -38,6 +38,7 @@ include(joinpath("models", "mixtures", "SALR_rpa_mixture.jl"))       # S_RPA_mix
 export blip
 export phi_VW, k_VW # Para sistemas monodispersos
 export phi_to_rho_mixture, rho_to_phi_mixture # Para mezclas
+export save_data
 
 # Desde potentials.jl (exportar si los usuarios las necesitan directamente)
 export betaU_SW, betaU_Yukawa
@@ -72,7 +73,6 @@ export S_RPA_mixture_SquareWell
 
 # Desde models/mixtures/SALR_rpa_mixture.jl
 export S_RPA_mixture_SALR
-
 
 # Considera también las funciones "fábrica" que devuelven f(k) si mantienes ese patrón
 # y quieres exportarlas explícitamente. Si una función tiene múltiples métodos (como las
