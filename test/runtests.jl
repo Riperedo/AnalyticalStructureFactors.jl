@@ -26,6 +26,8 @@ using Test                   # Importa el módulo de pruebas de Julia
         # Por ahora, lo dejaremos vacío o con una prueba simple si no tienes código de mezclas aún.
         #@test true # Una prueba trivial para que el testset no esté vacío
         include("models/mixtures/test_hardsphere_mixture.jl") # Descomenta cuando tengas este archivo
+        include("models/mixtures/test_squarewell_rpa_mixture.jl") # Descomenta cuando tengas este archivo
+        include("models/mixtures/test_yukawa_rpa_mixture.jl") # Descomenta cuando tengas este archivo
     end
 
     # Puedes añadir más @testset para otras categorías de pruebas.
