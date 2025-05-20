@@ -72,8 +72,8 @@ function S_RPA_mixture_SquareWell(σ_vector::AbstractVector{T}, ϕ_vector::Abstr
         end
     end
 
-    # 4. Apply the RPA formula: S⁻¹ = (S⁰)⁻¹ - βŨ_scaled
-    inv_S_matrix_RPA = inv_S0_matrix - beta_U_pert_scaled_matrix
+    # 4. Apply the RPA formula: S⁻¹ = (S⁰)⁻¹ + βŨ_scaled
+    inv_S_matrix_RPA = inv_S0_matrix + beta_U_pert_scaled_matrix
     
     # 5. Invert to get S(k)
     S_matrix_RPA_complex = inv(inv_S_matrix_RPA)
