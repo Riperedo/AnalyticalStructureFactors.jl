@@ -58,22 +58,17 @@ function S_RPA_mixture_SquareWell(σ_vector::AbstractVector{T}, ϕ_vector::Abstr
     beta_U_pert_scaled_matrix = zeros(Complex{T}, n_components, n_components)
     for i in 1:n_components
         for j in 1:n_components
-            if temperature_matrix[i,j] == 0 || lambda_range_matrix[i,j] == 0
-                beta_U_pert_scaled_matrix[i,j] = 0.0
-            else
-
-                # Get parameters for the ij pair
-                temp_ij = temperature_matrix[i,j]
-                lambda_ij = lambda_range_matrix[i,j]
-                
-                # Calculate βũ_SquareWell_ij(k)
-                # Asumimos que betaU_SW toma la temperatura y el rango para el par específico.
-                # El 'k' aquí es el k_wavevector global.
-                beta_u_tilde_ij = betaU_SW(temp_ij, lambda_ij, k_wavevector)
-                
-                # Apply density scaling
-                beta_U_pert_scaled_matrix[i,j] = sqrt(ρ_vector[i] * ρ_vector[j]) * beta_u_tilde_ij
-            end
+            # Get parameters for the ij pair
+            temp_ij = temperature_matrix[i,j]
+            lambda_ij = lambda_range_matrix[i,j]
+            
+            # Calculate βũ_SquareWell_ij(k)
+            # Asumimos que betaU_SW toma la temperatura y el rango para el par específico.
+            # El 'k' aquí es el k_wavevector global.
+            beta_u_tilde_ij = betaU_SW(temp_ij, lambda_ij, k_wavevector)
+            
+            # Apply density scaling
+            beta_U_pert_scaled_matrix[i,j] = sqrt(ρ_vector[i] * ρ_vector[j]) * beta_u_tilde_ij
         end
     end
 
