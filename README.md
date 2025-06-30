@@ -45,10 +45,15 @@ The package is registered in the Julia General Registry. You can install it from
 ```julia
 import Pkg
 Pkg.add("AnalyticalStructureFactors")
+```
+
 If you want to install the latest development version directly from GitHub:import Pkg
+```julia
 Pkg.add(url="[https://github.com/Riperedo/AnalyticalStructureFactors.jl](https://github.com/Riperedo/AnalyticalStructureFactors.jl)")
+```
 Quick StartHere's a basic example of how to calculate the static structure factor for Hard Spheres using the Percus-Yevick approximation:using AnalyticalStructureFactors
 
+```julia
 # Define parameters
 ϕ = 0.3  # Volume fraction
 k = 2.0  # Dimensionless wavevector (qσ)
