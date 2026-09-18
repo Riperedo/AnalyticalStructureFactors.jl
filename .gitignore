@@ -1,0 +1,38 @@
+# Files and directories ignored by Git for AnalyticalStructureFactors.jl
+
+# Legacy / Auxiliary code folder
+Aux_code/
+
+# Development history (local tracking)
+History.md
+
+# Julia test and coverage output
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+
+# Documenter.jl output
+/docs/build/
+/docs/site/
+
+# Editor and OS temporary files
+.DS_Store
+Thumbs.db
+*~
+*.swp
+.vscode/
+.idea/
+
+# Scratch temporary directory
+scratch/
+
+# LaTeX auxiliary build files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+

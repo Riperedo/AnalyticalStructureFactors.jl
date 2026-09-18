@@ -4,19 +4,21 @@ authors = ["Ricardo Peredo-Ortiz <rperedo@if.uaslp.mx>"]
 version = "0.0.1" # O la versión actual de tu paquete
 
 [deps]
-# Aquí irían las dependencias de tu paquete, si las tiene
-# Ejemplo:
-# SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
-LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e" # UUID de LinearAlgebra
-DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab" # UUID de DelimitedFiles
+DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 
 [compat]
-julia = "1.11" # O la versión mínima de Julia con la que tu paquete es compatible
-# Aquí irían los rangos de compatibilidad para tus dependencias
-# Ejemplo:
-# SpecialFunctions = "1"
-LinearAlgebra = "1" 
+julia = "1.11"
 DelimitedFiles = "1" 
+LinearAlgebra = "1" 
+SpecialFunctions = "2" 
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c043459109"
+
+[targets]
+test = ["Test"]
 
 # Puedes añadir un campo de descripción también:
 # description = "A Julia package for computing static structure factors using analytical solutions."
