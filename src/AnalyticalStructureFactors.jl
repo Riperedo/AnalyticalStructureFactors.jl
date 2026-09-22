@@ -22,6 +22,7 @@ include("fourier_tools.jl")
 
 # --- Single-Component (Monodisperse) Structure Factors ---
 include(joinpath("models", "hardsphere.jl")) # S_HS_PY, S_HS_VW, S_WCA_blip
+include(joinpath("models", "sticky_hardsphere.jl")) # S_Baxter_SHS, IS_Baxter_SHS, S_Menon_SHS (Baxter 1968, Menon et al. 1991)
 include(joinpath("models", "squarewell.jl")) # S_SW_RPA
 include(joinpath("models", "yukawa.jl"))     # S_Yukawa_RPA
 include(joinpath("models", "yukawa_msa.jl")) # S_Yukawa_MSA, IS_Yukawa_MSA, C_Yukawa_MSA (Exact Baxter-Høye-Blum solution)
@@ -33,6 +34,7 @@ include(joinpath("models", "fractal.jl"))    # S_Fractal_Chen (Chen-Teixeira mas
 include(joinpath("models", "formfactors.jl")) # P_sphere, P_coreshell, P_multishell, P_ellipsoid, beta_ellipsoid, intensity_decoupled
 
 # --- Multicomponent Mixture Structure Factors ---
+include(joinpath("models", "asakura_oosawa.jl")) # S_AO_cc, S_AO_cp, S_AO_pp, S_AO_matrix, S_AO_eff_cc, S_AO_eff_pp (Colloid-Polymer Mixtures)
 include(joinpath("models", "mixtures", "hardsphere_mixture.jl")) # S_HS_Baxter_mixture, IS_HS_Baxter_mixture
 include(joinpath("models", "mixtures", "vw_mixture.jl"))         # S_HS_VW_mixture, IS_HS_VW_mixture
 include(joinpath("models", "mixtures", "yukawa_rpa_mixture.jl")) # S_RPA_mixture_Yukawa
@@ -64,6 +66,10 @@ export S_HS_PY, C_HS_PY, IS_HS_PY
 export S_HS_VW, C_HS_VW, IS_HS_VW
 export S_WCA_blip, C_WCA_blip, IS_WCA_blip
 
+# From models/sticky_hardsphere.jl (Baxter 1968 & Menon et al. 1991)
+export S_Baxter_SHS, IS_Baxter_SHS, S_Menon_SHS
+export baxter_shs_lambda, baxter_shs_critical_tau
+
 # From models/squarewell.jl
 export S_SW_RPA
 
@@ -83,6 +89,11 @@ export S_Fractal_Chen
 
 # From models/formfactors.jl
 export P_sphere, P_coreshell, P_multishell, P_ellipsoid, beta_ellipsoid, effective_radius_ellipsoid, intensity_decoupled
+
+# From models/asakura_oosawa.jl (Colloid-Polymer Mixtures)
+export S_AO_cc, S_AO_cp, S_AO_pp, S_AO_matrix, S_AO_eff_cc, S_AO_eff_pp
+export C_AO_cc, C_AO_cp, C_AO_star, C_AO_eff_cc, C_AO_HS
+export free_volume_fraction_AO, spinodal_AO, polymer_reservoir_to_system_density_AO, polymer_system_to_reservoir_density_AO
 
 # Multicomponent Mixtures
 export Qk_mixture, S_HS_Baxter_mixture, IS_HS_Baxter_mixture

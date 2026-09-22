@@ -125,3 +125,51 @@ s_salr_rpa = S_SALR_RPA(ϕ, K1, z1, K2, z2, k)
 ```
 
 > **Tip**: For dense liquids and strong coupling regimes, use the exact **Mean Spherical Approximation (MSA)** instead of RPA, as described in [Mean Spherical Approximation](Mean-Spherical-Approximation).
+
+---
+
+## 5. Sticky Hard Spheres (Baxter & Menon Models)
+
+The **Sticky Hard Sphere (SHS)** model describes hard spheres with infinitely narrow, infinitely deep attractive surface adhesion under the Percus-Yevick approximation.
+
+### 5.1 Baxter Sticky Limit (`S_Baxter_SHS`)
+Baxter (1968) solved the Percus-Yevick equation using Wiener-Hopf factorization:
+$$S(k)^{-1} = A^2(\kappa) + B^2(\kappa)$$
+where $\kappa = k a$, and $\lambda$ is the physical root of $A\lambda^2 + B\lambda + C = 0$:
+$$A = \frac{\eta}{12}, \quad B = -\left(\tau + \frac{\eta^2}{1-\eta}\right), \quad C = \frac{1 + \eta/2}{(1-\eta)^2}$$
+
+```julia
+using AnalyticalStructureFactors
+
+eta = 0.25   # Volume fraction
+tau = 0.8    # Baxter stickiness parameter (smaller = more sticky, tau -> infty is pure HS)
+k = 3.5      # Dimensionless wavevector
+
+s_baxter = S_Baxter_SHS(eta, tau, k)
+inv_s = IS_Baxter_SHS(eta, tau, k)
+
+# Critical stickiness parameter (spinodal boundary)
+tau_c = baxter_shs_critical_tau(eta)
+```
+
+### 5.2 Menon Physical Square-Well Mapping (`S_Menon_SHS`)
+Menon et al. (1991) derived an exact physical mapping relating square-well potential parameters (hard-core diameter $\sigma$, well width $\Delta$, well depth $u_0/(k_B T)$, and physical volume fraction $\phi$) to the Baxter parameters:
+- $a = \sigma + \Delta$
+- $\epsilon = \Delta / a$
+- $\eta = \phi / (1 - \epsilon)^3$
+- $\tau = \frac{1}{12\epsilon} \exp\left(\frac{u_0}{k_B T}\right)$
+
+```julia
+phi = 0.20      # Physical volume fraction
+u0_kT = -1.2    # Attractive well depth u0 / (kB * T)
+delta = 0.05    # Well width Δ
+sigma = 1.0     # Hard core diameter σ
+k = 3.5         # Wavevector
+
+s_menon = S_Menon_SHS(phi, u0_kT, delta, sigma, k)
+```
+
+### References
+- R. J. Baxter, "Percus–Yevick Equation for Hard Spheres with Surface Adhesion", *J. Chem. Phys.* **49**(6), 2770–2774 (1968). DOI: [10.1063/1.1670482](https://doi.org/10.1063/1.1670482).
+- S. V. G. Menon, C. Manohar, and K. S. Rao, "A new interpretation of the sticky hard sphere model", *J. Chem. Phys.* **95**(12), 9186–9190 (1991). DOI: [10.1063/1.461199](https://doi.org/10.1063/1.461199).
+

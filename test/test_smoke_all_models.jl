@@ -89,4 +89,39 @@
         end
     end
 
+    @testset "Asakura-Oosawa Colloid-Polymer Model" begin
+        eta_c_smoke = 0.2
+        eta_p_smoke = 0.08
+        q_smoke = 0.5
+        try
+            s_cc = S_AO_cc(eta_c_smoke, eta_p_smoke, q_smoke, k_smoke_array)
+            s_cp = S_AO_cp(eta_c_smoke, eta_p_smoke, q_smoke, k_smoke_array)
+            s_pp = S_AO_pp(eta_c_smoke, eta_p_smoke, q_smoke, k_smoke_array)
+            s_eff_cc = S_AO_eff_cc(eta_c_smoke, eta_p_smoke, q_smoke, k_smoke_array)
+            @test all(s_val -> s_val > 0.0, s_cc)
+            @test all(s_val -> s_val > 0.0, s_pp)
+            @test all(s_val -> s_val > 0.0, s_eff_cc)
+            @test length(s_cc) == length(k_smoke_array)
+        catch e
+            @test false
+            println("Error en Asakura-Oosawa smoke test: $e")
+        end
+    end
+
+    @testset "Sticky Hard Spheres (Baxter & Menon)" begin
+        eta_shs_smoke = 0.2
+        tau_shs_smoke = 1.0
+        try
+            s_baxter = S_Baxter_SHS(eta_shs_smoke, tau_shs_smoke, k_smoke_array)
+            s_menon = S_Menon_SHS(0.2, -1.0, 0.05, 1.0, k_smoke_array)
+            @test all(s_val -> s_val > 0.0, s_baxter)
+            @test all(s_val -> s_val > 0.0, s_menon)
+            @test length(s_baxter) == length(k_smoke_array)
+            @test length(s_menon) == length(k_smoke_array)
+        catch e
+            @test false
+            println("Error en Sticky Hard Spheres smoke test: $e")
+        end
+    end
+
 end

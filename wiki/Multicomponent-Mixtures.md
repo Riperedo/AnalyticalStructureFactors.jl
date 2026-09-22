@@ -93,7 +93,49 @@ S_salr_mix = S_RPA_mixture_SALR(phi_vec, sigma_vec, K1_mat, Z1_mat, K2_mat, Z2_m
 
 ---
 
-## 5. Total Coherent Scattering from Mixtures
+## 5. Asakura-Oosawa (AO) Colloid-Polymer Model
+
+The **Asakura-Oosawa (AO) model** describes mixtures of hard-sphere colloids (species $c$, packing fraction $\eta_c$) and non-adsorbing ideal polymer coils (species $p$, packing fraction $\eta_p$) with size ratio $q = R_p / R_c$.
+
+Based on the density functional theory and Percus-Yevick analytical solution by **Schmidt et al. (2002)** (*J. Phys.: Condens. Matter* **14**, 9353):
+- **Free Volume Fraction**: $\alpha(\eta_c, q) = (1-\eta_c)\exp(-[A\gamma + B\gamma^2 + C\gamma^3])$ where $\gamma = \eta_c / (1 - \eta_c)$.
+- **Colloid-Colloid Direct Correlation**: $C_{cc}(k) = C_{\text{HS}}(\eta_c, k) + \eta_p C^*(\eta_c, q, k)$.
+- **Cross Direct Correlation**: $C_{cp}(k)$ across the core and overlap shells.
+- **Partial Structure Factors**: $S_{cc}(k), S_{cp}(k), S_{pp}(k)$.
+- **Effective One-Component Structure Factor**: $S_{cc}^{\text{eff}}(k) = \frac{1}{1 - \rho_c C_{cc}^{\text{eff}}(k)}$.
+
+### Usage Example:
+```julia
+using AnalyticalStructureFactors
+
+eta_c = 0.20   # Colloid volume fraction
+eta_p = 0.10   # Polymer volume fraction
+q = 0.6        # Size ratio Rp / Rc
+k = 2.5        # Dimensionless wavevector q * sigma_c
+
+# Partial structure factors
+s_cc = S_AO_cc(eta_c, eta_p, q, k)
+s_cp = S_AO_cp(eta_c, eta_p, q, k)
+s_pp = S_AO_pp(eta_c, eta_p, q, k)
+
+# Full 2x2 Ashcroft-Langreth structure factor matrix
+S_matrix = S_AO_matrix(eta_c, eta_p, q, k; VW=false)
+
+# Effective one-component colloid structure factor
+s_eff_cc = S_AO_eff_cc(eta_c, eta_p, q, k)
+
+# Spinodal curve polymer packing fraction
+eta_p_spinodal = spinodal_AO(eta_c, q)
+
+# Free volume fraction alpha(eta_c, q) and reservoir conversion
+alpha = free_volume_fraction_AO(eta_c, q)
+eta_p_res = polymer_system_to_reservoir_density_AO(eta_p, eta_c, q)
+```
+
+---
+
+## 6. Total Coherent Scattering from Mixtures
 
 For polydisperse mixtures with scattering length densities $b_i$, the total coherent scattering intensity $I(q)$ is:
 $$I(q) = \sum_{i=1}^p \sum_{j=1}^p \sqrt{\rho_i \rho_j} \, b_i(q) b_j(q) S_{ij}(q)$$
+

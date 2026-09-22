@@ -25,6 +25,31 @@ Complete reference of all functions exported by `AnalyticalStructureFactors.jl`.
 ### `S_WCA_blip(ϕ, k, T_star)`
 - **Description**: Structure factor for Weeks-Chandler-Andersen (WCA) repulsive core with temperature-dependent blip function.
 
+### `S_Baxter_SHS(η, τ, k)`
+- **Description**: Static structure factor for Baxter's Sticky Hard Sphere model under Percus-Yevick closure.
+- **Arguments**:
+  - `η::Real`: Volume fraction ($0 < \eta < 1$).
+  - `τ::Real`: Baxter stickiness parameter ($\tau > 0$, $\tau \to \infty$ for pure HS).
+  - `k::Real`: Dimensionless wavevector ($k = qa$).
+
+### `IS_Baxter_SHS(η, τ, k)`
+- **Description**: Inverse structure factor $1 / S(k) = A(k)^2 + B(k)^2$ for Baxter's Sticky Hard Sphere model.
+
+### `S_Menon_SHS(ϕ, u0_kT, Δ, σ, k)`
+- **Description**: Static structure factor for sticky hard spheres using the physical square-well mapping of Menon, Manohar, and Rao (1991).
+- **Arguments**:
+  - `ϕ::Real`: Physical volume fraction.
+  - `u0_kT::Real`: Dimensionless well depth $u_0 / (k_B T)$ ($u_0 < 0$ for attraction).
+  - `Δ::Real`: Width of the attractive square well.
+  - `σ::Real`: Hard-core particle diameter.
+  - `k::Real`: Scattering wavevector ($1 / \text{length}$).
+
+### `baxter_shs_lambda(η, τ)`
+- **Description**: Solves the Baxter quadratic equation and returns the physical root $\lambda(\eta, \tau)$.
+
+### `baxter_shs_critical_tau(η)`
+- **Description**: Critical stickiness parameter $\tau_c(\eta)$ corresponding to the fluid-fluid spinodal line ($D = 0$).
+
 ---
 
 ## 2. Monodisperse RPA & Exact MSA Solvers
@@ -113,6 +138,27 @@ Complete reference of all functions exported by `AnalyticalStructureFactors.jl`.
 
 ### `S_RPA_mixture_SALR(phi_vec, sigma_vec, K1_mat, Z1_mat, K2_mat, Z2_mat, k)`
 - **Description**: $p \times p$ partial structure factor matrix for multicomponent SALR mixture under RPA.
+
+### `S_AO_cc(eta_c, eta_p, q, k; VW=false)`
+- **Description**: Colloid-colloid partial structure factor for the Asakura-Oosawa colloid-polymer mixture.
+
+### `S_AO_cp(eta_c, eta_p, q, k; VW=false)`
+- **Description**: Colloid-polymer cross partial structure factor for the Asakura-Oosawa mixture.
+
+### `S_AO_pp(eta_c, eta_p, q, k; VW=false)`
+- **Description**: Polymer-polymer partial structure factor for the Asakura-Oosawa mixture.
+
+### `S_AO_matrix(eta_c, eta_p, q, k; VW=false)`
+- **Description**: $2 \times 2$ Ashcroft-Langreth partial structure factor matrix $\mathbf{S}(k)$ for Asakura-Oosawa colloid-polymer mixture.
+
+### `S_AO_eff_cc(eta_c, eta_p, q, k; VW=false)`
+- **Description**: Effective one-component colloid structure factor $S_{cc}^{\text{eff}}(k) = 1 / [1 - \rho_c C_{cc}^{\text{eff}}(k)]$.
+
+### `free_volume_fraction_AO(eta_c, q)`
+- **Description**: Free volume fraction $\alpha(\eta_c, q)$ from free-volume theory.
+
+### `spinodal_AO(eta_c, q)`
+- **Description**: Polymer packing fraction $\eta_p$ on the fluid-fluid spinodal line for size ratio $q = R_p / R_c$.
 
 ---
 

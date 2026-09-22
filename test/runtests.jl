@@ -8,6 +8,10 @@ using Test
         include("test_monodisperse.jl")
     end
 
+    @testset "Sticky Hard Spheres (Baxter 1968 & Menon et al. 1991)" begin
+        include(joinpath("models", "test_sticky_hardsphere.jl"))
+    end
+
     @testset "SALR Models (RPA & Exact MSA)" begin
         include(joinpath("models", "test_SALR.jl"))
         include(joinpath("models", "test_SALR_msa.jl"))
@@ -34,6 +38,7 @@ using Test
     end
 
     @testset "Multicomponent Mixture Systems" begin
+        include(joinpath("models", "test_asakura_oosawa.jl"))
         include(joinpath("models", "mixtures", "test_hardsphere_mixture.jl"))
         include(joinpath("models", "mixtures", "test_squarewell_rpa_mixture.jl"))
         include(joinpath("models", "mixtures", "test_yukawa_rpa_mixture.jl"))
